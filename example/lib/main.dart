@@ -26,9 +26,10 @@ class MyApp extends StatelessWidget {
             tabBar: CupertinoTabBar(
               items: [
                 BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.play_arrow), title: Text('home')),
+                    icon: Icon(CupertinoIcons.home), title: Text('home')),
                 BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.mail), title: Text('list')),
+                    icon: Icon(CupertinoIcons.settings),
+                    title: Text('setting')),
               ],
             ),
             tabBuilder: (BuildContext context, int index) {
@@ -61,7 +62,7 @@ class _YoutubePageState extends State<YoutubePage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('YOUTUBE'),
+        middle: Text('Skeleton'),
       ),
       child: SafeArea(
         child: Column(
