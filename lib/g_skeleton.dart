@@ -85,7 +85,7 @@ class SkeletonController {
 
   SkeletonController(
       {this.duration = const Duration(milliseconds: 200),
-      this.interval = const Duration(seconds: 2),
+      this.interval = const Duration(seconds: 1),
       this.begin = const Color(0xFFE5E5EA),
       this.end = const Color(0xFFEFEFF4)});
 
@@ -118,7 +118,7 @@ class SkeletonController {
       await Future.delayed(Duration(milliseconds: 100));
     }
 
-    await Future.delayed(this.interval + duration * _contexts.length);
+    await Future.delayed(this.interval);
     _forward();
   }
 
