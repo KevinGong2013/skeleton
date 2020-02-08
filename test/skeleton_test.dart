@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:g_skeleton/skeleton.dart';
+import 'package:g_skeleton/g_skeleton.dart';
 
 void main() {
   test('skeleton controller increasing logic', () {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:g_skeleton/skeleton.dart';
+import 'package:g_skeleton/g_skeleton.dart';
 
 void main() => runApp(MyApp());
 
