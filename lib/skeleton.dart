@@ -1,4 +1,4 @@
-library skeleton;
+library g_skeleton;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
