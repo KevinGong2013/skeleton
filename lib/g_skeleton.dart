@@ -7,7 +7,10 @@ class Skeleton extends StatefulWidget {
   final SkeletonController controller;
   final Key increasing;
 
-  Skeleton(this.controller, {this.increasing}) : assert(controller != null);
+  final WidgetBuilder builder;
+
+  Skeleton(this.controller, {this.increasing, this.builder})
+      : assert(controller != null);
 
   @override
   _SkeletonState createState() => _SkeletonState();
@@ -32,6 +35,10 @@ class _SkeletonState extends State<Skeleton>
 
     widget.controller.append(_SkeletonContext(
         _controller, widget.controller.newGroupIndex(widget.increasing)));
+
+    widget.controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -42,6 +49,9 @@ class _SkeletonState extends State<Skeleton>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.builder != null && !widget.controller.hasStarted) {
+      return widget.builder(context);
+    }
     return AnimatedBuilder(
       animation: _colorTween,
       builder: (BuildContext context, Widget child) {
@@ -60,7 +70,7 @@ class _SkeletonContext {
   _SkeletonContext(this.controller, this.groupIndex);
 }
 
-class SkeletonController {
+class SkeletonController extends ChangeNotifier {
   int _total = 1;
   bool _stop;
   Key _increasing;
@@ -125,10 +135,12 @@ class SkeletonController {
   void start() {
     assert(!hasStarted, 'already started');
     _stop = false;
+    notifyListeners();
     _forward();
   }
 
   void stop() {
+    notifyListeners();
     _stop = true;
   }
 }

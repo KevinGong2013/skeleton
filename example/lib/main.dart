@@ -51,6 +51,8 @@ class _YoutubePageState extends State<YoutubePage> {
   void initState() {
     super.initState();
     controller.start();
+
+    Future.delayed(Duration(seconds: 2)).then((value) => controller.stop());
   }
 
   @override
@@ -70,6 +72,15 @@ class _YoutubePageState extends State<YoutubePage> {
           children: <Widget>[
             _buildSkeletonItem(context),
             _buildSkeletonItem(context),
+            Expanded(
+              flex: 1,
+              child: Skeleton(
+                controller,
+                builder: (context) => Container(
+                  color: CupertinoColors.activeBlue,
+                ),
+              ),
+            ),
             Container(
               height: 50,
               child: Skeleton(
