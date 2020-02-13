@@ -20,6 +20,7 @@ class _SkeletonState extends State<Skeleton>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation _colorTween;
+  _SkeletonContext skeletonContext;
 
   @override
   void initState() {
@@ -32,9 +33,9 @@ class _SkeletonState extends State<Skeleton>
     _colorTween =
         ColorTween(begin: widget.controller.begin, end: widget.controller.end)
             .animate(_controller);
-
-    widget.controller.append(_SkeletonContext(
-        _controller, widget.controller.newGroupIndex(widget.increasing)));
+    skeletonContext = _SkeletonContext(
+        _controller, widget.controller.newGroupIndex(widget.increasing));
+    widget.controller.append(skeletonContext);
 
     widget.controller.addListener(() {
       setState(() {});
@@ -44,6 +45,7 @@ class _SkeletonState extends State<Skeleton>
   @override
   void dispose() {
     super.dispose();
+    widget.controller.remove(skeletonContext);
     _controller.dispose();
   }
 
@@ -117,14 +119,23 @@ class SkeletonController extends ChangeNotifier {
     _contexts[context.groupIndex] = contexts;
   }
 
+  void remove(_SkeletonContext context) {
+    var contexts = _contexts[context.groupIndex];
+    if (contexts != null) {
+      contexts.remove(context);
+      _contexts[context.groupIndex] = contexts;
+    }
+  }
+
   void _forward() async {
     if (_stop) {
       return;
     }
 
     for (final e in _contexts.entries) {
-      await Future.wait(e.value.map(
-          (c) => c.controller.forward().then((v) => c.controller.reverse())));
+      await Future.wait(e.value.map((c) => c.controller.forward().then((v) {
+            if (_contexts[e.key] != null) c.controller.reverse();
+          })));
       await Future.delayed(Duration(milliseconds: 100));
     }
 
