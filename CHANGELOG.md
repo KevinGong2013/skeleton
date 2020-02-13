@@ -9,3 +9,8 @@
 ## 0.0.4
 
 -   modify default interval to 1.second
+
+## 0.0.5
+
+-   fixed remove context after widget disposed.
+-   show skeleton child after animation stopped.
