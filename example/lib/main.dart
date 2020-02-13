@@ -45,14 +45,14 @@ class YoutubePage extends StatefulWidget {
 }
 
 class _YoutubePageState extends State<YoutubePage> {
-  final controller = SkeletonController();
+  final controller = SkeletonController(end: CupertinoColors.activeOrange);
 
   @override
   void initState() {
     super.initState();
     controller.start();
 
-    Future.delayed(Duration(seconds: 2)).then((value) => controller.stop());
+    Future.delayed(Duration(seconds: 20)).then((value) => controller.stop());
   }
 
   @override
@@ -79,6 +79,7 @@ class _YoutubePageState extends State<YoutubePage> {
                 builder: (context) => Container(
                   color: CupertinoColors.activeBlue,
                 ),
+                increasing: UniqueKey(),
               ),
             ),
             Container(
