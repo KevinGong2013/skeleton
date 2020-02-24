@@ -44,9 +44,9 @@ class _SkeletonState extends State<Skeleton>
 
   @override
   void dispose() {
-    super.dispose();
-    widget.controller.remove(skeletonContext);
     _controller.dispose();
+    widget.controller.remove(skeletonContext);
+    super.dispose();
   }
 
   @override
