@@ -18,3 +18,7 @@
 ## 0.0.6
 
 -   fixed dispose issue.
+
+## 0.0.7
+
+-   refactor
