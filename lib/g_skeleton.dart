@@ -36,10 +36,6 @@ class _SkeletonState extends State<Skeleton>
     skeletonContext = _SkeletonContext(
         _controller, widget.controller.newGroupIndex(widget.increasing));
     widget.controller.append(skeletonContext);
-
-    widget.controller.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
@@ -54,11 +50,17 @@ class _SkeletonState extends State<Skeleton>
     if (widget.builder != null && !widget.controller.hasStarted) {
       return widget.builder(context);
     }
-    return AnimatedBuilder(
-      animation: _colorTween,
-      builder: (BuildContext context, Widget child) {
-        return Container(
-          color: _colorTween.value,
+    return ValueListenableBuilder(
+      valueListenable: widget.controller,
+      builder: (context, value, child) {
+        if (widget.builder != null && !value) return widget.builder(context);
+        return AnimatedBuilder(
+          animation: _colorTween,
+          builder: (BuildContext context, Widget child) {
+            return Container(
+              color: _colorTween.value,
+            );
+          },
         );
       },
     );
@@ -72,11 +74,10 @@ class _SkeletonContext {
   _SkeletonContext(this.controller, this.groupIndex);
 }
 
-class SkeletonController extends ChangeNotifier {
+class SkeletonController extends ValueNotifier<bool> {
   int _total = 1;
-  bool _stop;
   Key _increasing;
-  bool get hasStarted => (_stop == null) ? false : !_stop;
+  bool get hasStarted => value;
 
   // The length of time of skeleton animation.
   //
@@ -99,7 +100,8 @@ class SkeletonController extends ChangeNotifier {
       {this.duration = const Duration(milliseconds: 200),
       this.interval = const Duration(seconds: 1),
       this.begin = const Color(0xFFE5E5EA),
-      this.end = const Color(0xFFEFEFF4)});
+      this.end = const Color(0xFFEFEFF4)})
+      : super(false);
 
   // create index for new widget
   int newGroupIndex(Key increasing) {
@@ -128,7 +130,7 @@ class SkeletonController extends ChangeNotifier {
   }
 
   void _forward() async {
-    if (_stop) {
+    if (!value) {
       return;
     }
 
@@ -145,13 +147,11 @@ class SkeletonController extends ChangeNotifier {
 
   void start() {
     assert(!hasStarted, 'already started');
-    _stop = false;
-    notifyListeners();
+    value = true;
     _forward();
   }
 
   void stop() {
-    notifyListeners();
-    _stop = true;
+    value = false;
   }
 }
