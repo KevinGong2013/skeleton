@@ -14,3 +14,7 @@
 
 -   fixed remove context after widget disposed.
 -   show skeleton child after animation stopped.
+
+## 0.0.6
+
+-   fixed dispose issue.
