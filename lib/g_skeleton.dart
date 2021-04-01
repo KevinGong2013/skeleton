@@ -5,12 +5,11 @@ import 'package:flutter/widgets.dart';
 
 class Skeleton extends StatefulWidget {
   final SkeletonController controller;
-  final Key increasing;
+  final Key? increasing;
 
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
 
-  Skeleton(this.controller, {this.increasing, this.builder})
-      : assert(controller != null);
+  Skeleton(this.controller, {this.increasing, this.builder});
 
   @override
   _SkeletonState createState() => _SkeletonState();
@@ -18,9 +17,9 @@ class Skeleton extends StatefulWidget {
 
 class _SkeletonState extends State<Skeleton>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _colorTween;
-  _SkeletonContext skeletonContext;
+  AnimationController? _controller;
+  late Animation _colorTween;
+  late _SkeletonContext skeletonContext;
 
   @override
   void initState() {
@@ -32,7 +31,7 @@ class _SkeletonState extends State<Skeleton>
         vsync: this);
     _colorTween =
         ColorTween(begin: widget.controller.begin, end: widget.controller.end)
-            .animate(_controller);
+            .animate(_controller!);
     skeletonContext = _SkeletonContext(
         _controller, widget.controller.newGroupIndex(widget.increasing));
     widget.controller.append(skeletonContext);
@@ -40,7 +39,7 @@ class _SkeletonState extends State<Skeleton>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     widget.controller.remove(skeletonContext);
     super.dispose();
   }
@@ -48,15 +47,15 @@ class _SkeletonState extends State<Skeleton>
   @override
   Widget build(BuildContext context) {
     if (widget.builder != null && !widget.controller.hasStarted) {
-      return widget.builder(context);
+      return widget.builder!(context);
     }
     return ValueListenableBuilder(
       valueListenable: widget.controller,
-      builder: (context, value, child) {
-        if (widget.builder != null && !value) return widget.builder(context);
+      builder: (context, dynamic value, child) {
+        if (widget.builder != null && !value) return widget.builder!(context);
         return AnimatedBuilder(
           animation: _colorTween,
-          builder: (BuildContext context, Widget child) {
+          builder: (BuildContext context, Widget? child) {
             return Container(
               color: _colorTween.value,
             );
@@ -68,7 +67,7 @@ class _SkeletonState extends State<Skeleton>
 }
 
 class _SkeletonContext {
-  final AnimationController controller;
+  final AnimationController? controller;
   final int groupIndex;
 
   _SkeletonContext(this.controller, this.groupIndex);
@@ -76,7 +75,7 @@ class _SkeletonContext {
 
 class SkeletonController extends ValueNotifier<bool> {
   int _total = 1;
-  Key _increasing;
+  Key? _increasing;
   bool get hasStarted => value;
 
   // The length of time of skeleton animation.
@@ -104,7 +103,7 @@ class SkeletonController extends ValueNotifier<bool> {
       : super(false);
 
   // create index for new widget
-  int newGroupIndex(Key increasing) {
+  int newGroupIndex(Key? increasing) {
     if (increasing == null) {
       return _total - 1;
     }
@@ -135,8 +134,8 @@ class SkeletonController extends ValueNotifier<bool> {
     }
 
     for (final e in _contexts.entries) {
-      await Future.wait(e.value.map((c) => c.controller.forward().then((v) {
-            if (_contexts[e.key] != null) c.controller.reverse();
+      await Future.wait(e.value.map((c) => c.controller!.forward().then((v) {
+            if (_contexts[e.key] != null) c.controller!.reverse();
           })));
       await Future.delayed(Duration(milliseconds: 100));
     }

@@ -27,10 +27,9 @@ class MyApp extends StatelessWidget {
             tabBar: CupertinoTabBar(
               items: [
                 BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.home), title: Text('home')),
+                    icon: Icon(CupertinoIcons.home), label: 'home'),
                 BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.settings),
-                    title: Text('setting')),
+                    icon: Icon(CupertinoIcons.settings), label: 'setting'),
               ],
             ),
             tabBuilder: (BuildContext context, int index) {
